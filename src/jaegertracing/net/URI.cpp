@@ -20,7 +20,7 @@
 #include <cstring>
 #include <iomanip>
 #include <iostream>
-#include <regex>
+#include <boost/regex.hpp>
 #include <cctype>
 
 namespace jaegertracing {
@@ -68,11 +68,9 @@ URI URI::parse(const std::string& uriStr)
 {
     // See https://tools.ietf.org/html/rfc3986 for explanation.
     URI uri;
-    std::regex uriRegex(
-        "^(([^:/?#]+):)?(//([^/?#]*))?([^?#]*)(\\?([^#]*))?(#(.*))?",
-        std::regex::extended);
-    std::smatch match;
-    std::regex_match(uriStr, match, uriRegex);
+    boost::regex uriRegex{"^(([^:/?#]+):)?(//([^/?#]*))?([^?#]*)(\\?([^#]*))?(#(.*))?"};
+    boost::smatch match;
+    boost::regex_search(uriStr, match, uriRegex);
 
     constexpr auto kSchemeIndex = 2;
     constexpr auto kAuthorityIndex = 4;

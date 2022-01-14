@@ -17,7 +17,7 @@
 #include "jaegertracing/net/http/Request.h"
 #include "jaegertracing/net/http/SocketReader.h"
 
-#include <regex>
+#include <boost/regex.hpp>
 
 namespace jaegertracing {
 namespace net {
@@ -32,12 +32,11 @@ Request Request::read(Socket & socket)
 
 Request Request::parse(std::istream& in)
 {
-    const std::regex requestLinePattern(
-        "([A-Z]+) ([^ ]+) HTTP/([0-9]\\.[0-9])$");
+    const boost::regex requestLinePattern{"([A-Z]+) ([^ ]+) HTTP/([0-9]\\.[0-9])$"};
     std::string line;
-    std::smatch match;
+    boost::smatch match;
     if (!readLineCRLF(in, line) ||
-        !std::regex_match(line, match, requestLinePattern) ||
+        !boost::regex_search(line, match, requestLinePattern) ||
         match.size() < 4) {
         throw ParseError::make("request line", line);
     }

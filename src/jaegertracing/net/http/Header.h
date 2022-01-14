@@ -18,7 +18,7 @@
 #define JAEGERTRACING_NET_HTTP_HEADER_H
 
 #include <cassert>
-#include <regex>
+#include <boost/regex.hpp>
 #include <string>
 
 #include "jaegertracing/net/http/Error.h"
@@ -77,14 +77,14 @@ inline std::istream& readLineCRLF(std::istream& in, std::string& line)
 
 inline void readHeaders(std::istream& in, std::vector<Header>& headers)
 {
-    const std::regex headerPattern("([^:]+): (.+)$");
+    const boost::regex headerPattern{"([^:]+): (.+)$"};
     std::string line;
-    std::smatch match;
+    boost::smatch match;
     while (readLineCRLF(in, line)) {
         if (line.empty()) {
             break;
         }
-        if (!std::regex_match(line, match, headerPattern) || match.size() < 3) {
+        if (!boost::regex_search(line, match, headerPattern) || match.size() < 3) {
             throw ParseError::make("header", line);
         }
         headers.emplace_back(Header(match[1], match[2]));

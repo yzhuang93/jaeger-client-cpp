@@ -54,10 +54,13 @@ endif()
 
 set(package_deps)
 
-if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" AND
-   CMAKE_CXX_COMPILER_VERSION VERSION_LESS "4.9")
-  message(FATAL_ERROR "Must use gcc >= 4.9")
-endif()
+# if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" AND
+#   CMAKE_CXX_COMPILER_VERSION VERSION_LESS "4.9")
+#  message(FATAL_ERROR "Must use gcc >= 4.9")
+# endif()
+
+find_library(BOOST_REGEX_LIB boost_regex)
+list(APPEND LIBS ${BOOST_REGEX_LIB})
 
 hunter_add_package(thrift)
 find_package(thrift ${hunter_config} REQUIRED)
