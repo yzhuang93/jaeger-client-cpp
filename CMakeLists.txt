@@ -54,23 +54,16 @@ endif()
 
 set(package_deps)
 
-# if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" AND
-#   CMAKE_CXX_COMPILER_VERSION VERSION_LESS "4.9")
-#  message(FATAL_ERROR "Must use gcc >= 4.9")
-# endif()
+if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" AND
+  CMAKE_CXX_COMPILER_VERSION VERSION_LESS "4.8.5")
+ message(FATAL_ERROR "Must use gcc >= 4.8.5")
+endif()
 
 find_library(BOOST_REGEX_LIB boost_regex)
 list(APPEND LIBS ${BOOST_REGEX_LIB})
 
-hunter_add_package(thrift)
-find_package(thrift ${hunter_config} REQUIRED)
-if(HUNTER_ENABLED)
-  list(APPEND LIBS thrift::thrift_static)
-else()
-  list(APPEND LIBS ${THRIFT_LIBRARIES})
-endif()
-list(APPEND package_deps thrift)
-
+find_library(THRIFT_LIB thrift)
+list(APPEND LIBS ${THRIFT_LIB})
 
 hunter_add_package(opentracing-cpp)
 # Not `${hunter_config}` because OpenTracing provides its own
